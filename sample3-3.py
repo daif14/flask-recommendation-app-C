@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
+import random
 
 # Spotify API 認証情報
 CLIENT_ID = 'f48dda32a0544428a6808ffc4a03e5ec'
@@ -24,7 +25,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)  # セッション用のシークレットキーを設定
 
 # 使用する特徴量
-FEATURES = ['mode', 'acousticness', 'danceability', 'valence', 'instrumentalness', 'speechiness', 'loudness', 'tempo']
+FEATURES = ['key', 'energy', 'mode', 'acousticness', 'danceability', 'valence', 'instrumentalness', 'speechiness', 'loudness', 'tempo']
 
 # ジャンルごとのCSVファイルの読み込み関数
 def load_genre_data(genre):
@@ -103,12 +104,16 @@ def get_user_recent_tracks():
     
     for feature, item in zip(features, recent_tracks['items']):
         if feature:
+            # key と energy をランダムな値に設定
+            random_key = random.randint(0, 11)  # key は 0 から 11 の間
+            random_energy = random.uniform(0.0, 1.0)  # energy は 0.0 から 1.0 の間
+
             track_info.append({
                 'track_name': item['track']['name'],
                 'artist_name': item['track']['artists'][0]['name'],
                 'id': item['track']['id'],
-                'key': feature['key'],
-                'energy': feature['energy'],
+                'key': random_key,  # ランダムな key
+                'energy': random_energy,  # ランダムな energy
                 'mode': feature['mode'],
                 'acousticness': feature['acousticness'],
                 'danceability': feature['danceability'],
